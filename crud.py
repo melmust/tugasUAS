@@ -6,63 +6,69 @@ class Mahasiswa:
         self.nim = nim
         self.nama = nama
 
-# Kelas manajemen data
-class DataMahasiswa:
-    def __init__(self):
-        self.data = []
+    def __str__(self):
+        return f"NIM: {self.nim}, Nama: {self.nama}"
 
-    def tambah(self, nim, nama):
-        self.data.append(Mahasiswa(nim, nama))
+# Data disimpan di list session_state
+if 'data_mahasiswa' not in st.session_state:
+    st.session_state.data_mahasiswa = []
 
-    def lihat(self):
-        return self.data
+# Tampilan utama
+st.title("Aplikasi CRUD Mahasiswa (OOP + Angka Menu)")
 
-    def hapus(self, index):
-        del self.data[index]
+st.write("### Pilihan Menu:")
+st.write("1. Lihat Data")
+st.write("2. Tambah Data")
+st.write("3. Ubah Data")
+st.write("4. Hapus Data")
 
-    def ubah(self, index, nim, nama):
-        self.data[index].nim = nim
-        self.data[index].nama = nama
+menu = st.text_input("Masukkan angka menu (1-4):")
 
-# Inisialisasi
-if 'db' not in st.session_state:
-    st.session_state.db = DataMahasiswa()
-db = st.session_state.db
+# Fungsi menu
+if menu == "1":
+    st.subheader("📄 Daftar Mahasiswa")
+    if st.session_state.data_mahasiswa:
+        for i, mhs in enumerate(st.session_state.data_mahasiswa):
+            st.write(f"{i+1}. {mhs}")
+    else:
+        st.info("Belum ada data.")
 
-# UI
-st.title("CRUD Mahasiswa (OOP Sederhana)")
-menu = st.selectbox("Menu", ["Lihat", "Tambah", "Ubah", "Hapus"])
+elif menu == "2":
+    st.subheader("➕ Tambah Mahasiswa")
+    nim = st.text_input("Masukkan NIM")
+    nama = st.text_input("Masukkan Nama")
+    if st.button("Simpan"):
+        if nim and nama:
+            mhs = Mahasiswa(nim, nama)
+            st.session_state.data_mahasiswa.append(mhs)
+            st.success("Data berhasil ditambahkan.")
+        else:
+            st.warning("Harap isi semua kolom.")
 
-if menu == "Lihat":
-    st.subheader("Daftar Mahasiswa")
-    for i, m in enumerate(db.lihat()):
-        st.write(f"{i+1}. NIM: {m.nim}, Nama: {m.nama}")
-
-elif menu == "Tambah":
-    nim = st.text_input("NIM")
-    nama = st.text_input("Nama")
-    if st.button("Tambah"):
-        db.tambah(nim, nama)
-        st.success("Data ditambahkan.")
-
-elif menu == "Ubah":
-    data = db.lihat()
+elif menu == "3":
+    st.subheader("✏️ Ubah Mahasiswa")
+    data = st.session_state.data_mahasiswa
     if data:
-        idx = st.number_input("Index data (mulai dari 0)", 0, len(data)-1)
-        nim = st.text_input("NIM Baru", data[idx].nim)
-        nama = st.text_input("Nama Baru", data[idx].nama)
-        if st.button("Ubah"):
-            db.ubah(idx, nim, nama)
-            st.success("Data diubah.")
+        index = st.number_input("Masukkan nomor data yang ingin diubah", min_value=1, max_value=len(data))
+        nim = st.text_input("NIM Baru", value=data[index-1].nim)
+        nama = st.text_input("Nama Baru", value=data[index-1].nama)
+        if st.button("Simpan Perubahan"):
+            data[index-1].nim = nim
+            data[index-1].nama = nama
+            st.success("Data berhasil diubah.")
     else:
         st.info("Tidak ada data.")
 
-elif menu == "Hapus":
-    data = db.lihat()
+elif menu == "4":
+    st.subheader("🗑️ Hapus Mahasiswa")
+    data = st.session_state.data_mahasiswa
     if data:
-        idx = st.number_input("Index data (mulai dari 0)", 0, len(data)-1)
+        index = st.number_input("Masukkan nomor data yang ingin dihapus", min_value=1, max_value=len(data))
         if st.button("Hapus"):
-            db.hapus(idx)
-            st.success("Data dihapus.")
+            del data[index-1]
+            st.success("Data berhasil dihapus.")
     else:
         st.info("Tidak ada data.")
+
+elif menu != "":
+    st.warning("Masukkan angka 1 - 4 sesuai menu.")
