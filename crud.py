@@ -48,27 +48,11 @@ elif menu == "2":
 elif menu == "3":
     st.subheader("✏️ Ubah Mahasiswa")
     data = st.session_state.data_mahasiswa
-    if data:
-        index = st.number_input("Masukkan nomor data yang ingin diubah", min_value=1, max_value=len(data))
-        nim = st.text_input("NIM Baru", value=data[index-1].nim)
-        nama = st.text_input("Nama Baru", value=data[index-1].nama)
-        if st.button("Simpan Perubahan"):
-            data[index-1].nim = nim
-            data[index-1].nama = nama
-            st.success("Data berhasil diubah.")
-    else:
-        st.info("Tidak ada data.")
+    
 
 elif menu == "4":
     st.subheader("🗑️ Hapus Mahasiswa")
-    data = st.session_state.data_mahasiswa
-    if data:
-        index = st.number_input("Masukkan nomor data yang ingin dihapus", min_value=1, max_value=len(data))
-        if st.button("Hapus"):
-            del data[index-1]
-            st.success("Data berhasil dihapus.")
-    else:
-        st.info("Tidak ada data.")
+    
 
 elif menu != "":
     st.warning("Masukkan angka 1 - 4 sesuai menu.")
