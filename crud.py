@@ -14,7 +14,7 @@ if 'data_mahasiswa' not in st.session_state:
     st.session_state.data_mahasiswa = []
 
 # Tampilan utama
-st.title("Aplikasi CRUD Mahasiswa (OOP + Angka Menu)")
+st.title("Aplikasi CRUD Mahasiswa")
 
 st.write("### Pilihan Menu:")
 st.write("1. Lihat Data")
